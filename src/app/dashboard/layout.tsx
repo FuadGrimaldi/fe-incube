@@ -1,27 +1,27 @@
-import UserNavigation from "@/components/UserNavigation";
-import Link from "next/link";
+"use client";
+import React, { useState } from "react";
+import Sidebar from "@/components/Sidebar/sidebar";
+import FooterUser from "@/components/Footer/footerUser";
 
-interface DashboardLayoutProps {
-  children?: React.ReactNode;
-}
+export default function Layout({ children }: { children: React.ReactNode }) {
+  const [sideMenuIsExpanded, setSideMenuIsExpanded] = useState(true);
 
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div>
-      <header className="bg-blue-500 p-4">
-        <div className="container mx-auto flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-xl font-bold text-white"
-          >
-            Logo
-          </Link>
+    <div className="flex">
+      {/* Sidebar container */}
+      <div  
+        className={`${
+          sideMenuIsExpanded ? "w-[200px]" : "lg:w-20 w-[60px]" // Control width of the sidebar
+        } transition-all duration-300 bg-[#ffb800]`}
+      >
+        <Sidebar setExpand={setSideMenuIsExpanded} />
+      </div>
 
-          <UserNavigation />
-        </div>
-      </header>
-
-      <main className="container mx-auto my-4">{children}</main>
+      {/* Main content container */}
+      <div className="flex-1 bg-gray-100 transition-all duration-300">
+        <main>{children}</main>
+        <FooterUser />
+      </div>
     </div>
   );
 }
