@@ -1,23 +1,18 @@
-import RegisterForm from "@/components/RegisterForm";
-import Link from "next/link";
+import Signup from "@/components/Auth/Signup";
+import { Metadata } from "next";
 
-export default function Page() {
+export const metadata: Metadata = {
+  title: "Register Incube",
+  description: "This is register page for Incube",
+  // other metadata
+};
+
+const SignupPage = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="mb-4 text-2xl font-bold">Register</h1>
-
-      <RegisterForm />
-
-      <ul className="mt-4">
-        <li>
-          <Link
-            href="/login"
-            className="bg-gray-100 px-4 py-2 text-blue-500 hover:underline"
-          >
-            Login
-          </Link>{" "}
-        </li>
-      </ul>
-    </div>
+    <>
+      <Signup />
+    </>
   );
-}
+};
+
+export default SignupPage;

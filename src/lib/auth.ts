@@ -39,8 +39,6 @@ export const authOptions: NextAuthOptions = {
 
           const data: { user: User; access_token: string } = await response.json();
 
-          console.log("Authorized user:", {accessToken: data?.access_token });
-
           if (!data?.access_token) {
             throw response;
           }

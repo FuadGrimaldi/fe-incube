@@ -75,7 +75,7 @@ body {
 }
 
 #loginPage {
-  background-image: url("../../public/assets/Group_26953.png");
+  background-image: url("/assets/Group_26953.png");
   background-position: top;
   background-repeat: no-repeat;
   background-size: cover;
