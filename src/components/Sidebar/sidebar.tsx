@@ -52,6 +52,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
     localStorage.removeItem("username");
     localStorage.removeItem("email");
     localStorage.removeItem("productId");
+    localStorage.removeItem("token");
     event.preventDefault(); // Prevent default link behavior
     signOut({
       redirect: true,
