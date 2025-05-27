@@ -149,7 +149,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
           </li>
           <li>
             <details>
-              <summary className="text-xl hover:underline transition-all duration-500">
+              <summary className="text-xl hover:underline transition-all duration-500 text-white">
                 Docs
               </summary>
               <ul className="mx-6 w-[130px]">
@@ -159,7 +159,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
                   <Link
                     href="/docs/faq"
                     className={`text-base hover:underline transition-all duration-500 ${
-                      pathName === "/docs/faq" ? "text-[#10375C]" : "text-white"
+                      pathName === "/docs/faq" ? "text-[#10375C]" : "text-black"
                     }`}
                   >
                     FAQ
@@ -171,7 +171,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
                     className={`text-base hover:underline transition-all duration-500 ${
                       pathName === "/docs/howto"
                         ? "text-[#10375C]"
-                        : "text-white"
+                        : "text-black"
                     }`}
                   >
                     Docs
@@ -184,7 +184,7 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
             <motion.div
               className={`${
                 pathName === "/login"
-                  ? "bg-[#10375C] text white "
+                  ? "bg-[#10375C] text-white "
                   : "bg-gray-100 text-[#3f2013]"
               } rounded-[15px] font-montserrat text-xl px-6 py-3}`}
               initial={{ opacity: 0, scale: 0.9 }}
