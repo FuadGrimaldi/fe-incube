@@ -53,8 +53,12 @@ const Dashboard = () => {
 
       // ✅ Ambil id produk dari elemen pertama, jika ada
       const firstProductId = data.data[0]?.produk?.id;
+      const email = data.data[0]?.user?.email;
+      const username = data.data[0]?.user?.name;
       setProductId(firstProductId);
       localStorage.setItem("productId", firstProductId || "");
+      localStorage.setItem("email", email || "");
+      localStorage.setItem("username", username || "");
 
     } catch (error) {
       console.error("Error fetching profile data:", error);
