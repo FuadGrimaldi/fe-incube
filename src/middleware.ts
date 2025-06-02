@@ -17,7 +17,7 @@ export default withAuth(
 
     if (token) {
       if (isIndexpage || isGuestRoute) {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
+        return NextResponse.redirect(new URL("/dashboard", process.env.NEXTAUTH_URL));
       }
     }
     return NextResponse.next();
