@@ -9,6 +9,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import Swal from "sweetalert2";
 import TemperatureBarChart from "../chart/barChart";
+import fetchClient from "@/lib/fetch-client";
 
 type ClientType = {
   subscribe: (topic: string) => void;
@@ -32,7 +33,7 @@ type DataType = {
   gas: number;
   fan: string;
   lampu: string;
-  ts: string; // timestamp
+  created_at: string; // timestamp
 };
 
 const CardIncubeReport: React.FC<reportParams> = ({
@@ -185,11 +186,19 @@ const CardIncubeReport: React.FC<reportParams> = ({
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch(`/api/data/sensor/${productId}`);
+          const response = await fetchClient({
+          method: "GET",
+          url: process.env.NEXT_PUBLIC_BACKEND_API_URL + "/api/user/data-produk/" + productId,
+        });
+
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error("Failed to fetch profile data");
         }
-        const result = await response.json();
+
+        const data = await response.json();
+        const result = data.data; // Ambil data dari response
+
+        console.log("Response Data sensor:", result); // ✅ DI SINI AKAN MUNCUL
 
         if (Array.isArray(result)) {
           const sortedData = result.sort((a: any, b: any) => a.id - b.id);
@@ -292,7 +301,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
       const filteredItems: any[] = [];
 
       data.forEach((item) => {
-        const itemDate = new Date(item.ts); // `ts` adalah timestamp data
+        const itemDate = new Date(item.created_at); // `ts` adalah timestamp data
         if (itemDate >= start && itemDate <= end) {
           filteredTemp.push(item.suhu); // `suhu` adalah temperature
           filteredHumid.push(item.humid); // `humid` adalah humidity
@@ -381,7 +390,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
       item.gas,
       item.fan,
       item.lampu,
-      item.ts,
+      item.created_at,
     ]);
     // Hitung rata-rata
     const avgTemp = averageTemp.toFixed(2);
@@ -653,7 +662,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
                                 {item.id}
                               </td>
                               <td className="lg:w-28 w-8 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px] lg:block hidden">
-                                {item.id_produk}
+                                {item.produk.id}
                               </td>
                               <td className="lg:w-16 w-14 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px]">
                                 {item.suhu}
@@ -671,7 +680,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
                                 {item.fan}
                               </td>
                               <td className="lg:w-32 w-28 border border-gray-300 px-1 py-1 text-black lg:text-base text-[8px] truncate">
-                                {item.ts}
+                                {item.created_at}
                               </td>
                             </tr>
                           ))}
