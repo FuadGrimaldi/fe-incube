@@ -7,8 +7,6 @@ import fetchClient from "@/lib/fetch-client";
 
 type UserSubs = {
   id: number;
-  id_cus: number;
-  id_produk: string;
   start_sub: string;
   end_sub: string;
   created_at: string;
@@ -24,7 +22,7 @@ type UserSubs = {
     active: string;
     created_at: string;
   };
-  users: {
+  user: {
     id: number;
     username: string;
     email: string;
@@ -35,7 +33,6 @@ type UserSubs = {
 
 const ControlCom = () => {
   const [userSubsData, setUserSubsData] = useState<UserSubs[] | null>(null);
-  const [productId, setProductId] = useState<string | any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -52,28 +49,18 @@ const ControlCom = () => {
 
       const data = await response.json();
 
-      console.log("Response Data:", data); // ✅ DI SINI AKAN MUNCUL
+      // console.log("Response Data:", data); // ✅ DI SINI AKAN MUNCUL
 
       setUserSubsData(data.data);
-
-      // ✅ Ambil id produk dari elemen pertama, jika ada
-      const firstProductId = data.data[0]?.produk?.id;
-      const email = data.data[0]?.user?.email;
-      const username = data.data[0]?.user?.name;
-      setProductId(firstProductId);
-      localStorage.setItem("productId", firstProductId || "");
-      localStorage.setItem("email", email || "");
-      localStorage.setItem("username", username || "");
-
     } catch (error) {
       console.error("Error fetching profile data:", error);
     } finally {
       setLoading(false);
     }
   };
-
   fetchUserSubsData();
-  }, []);
+}, []);
+
 
   if (loading) {
     return <div className="text-center mt-10">Loading...</div>;

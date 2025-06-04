@@ -78,7 +78,7 @@ const CardIncubeDashboard: React.FC<incubeProductProps> = ({
     const payload = message.payloadString;
     const topic = message.destinationName;
 
-    if (topic === `${productId}Temp`) {
+    if (topic === `${productId}/Temp`) {
       const newTemperature = parseFloat(payload);
       setTemp((prevData) => {
         const updatedData = [...prevData, newTemperature];
