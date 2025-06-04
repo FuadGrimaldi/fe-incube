@@ -37,7 +37,7 @@ type UserSubs = {
 
 const SettingCom = () => {
   const [userSubsData, setUserSubsData] = useState<UserSubs[] | null>(null);
-  const [productId, setProductId] = useState<string | any>(null);
+  const [daysLeft, setDaysLeft] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [activeIncu, setActiveIncu] = useState<number | null>(null);
 
@@ -59,15 +59,6 @@ const SettingCom = () => {
 
       setUserSubsData(data.data);
 
-      // ✅ Ambil id produk dari elemen pertama, jika ada
-      const firstProductId = data.data[0]?.produk?.id;
-      const email = data.data[0]?.user?.email;
-      const username = data.data[0]?.user?.name;
-      setProductId(firstProductId);
-      localStorage.setItem("productId", firstProductId || "");
-      localStorage.setItem("email", email || "");
-      localStorage.setItem("username", username || "");
-
     } catch (error) {
       console.error("Error fetching profile data:", error);
     } finally {
@@ -79,8 +70,20 @@ const SettingCom = () => {
   }, []);
 
   useEffect(() => {
-    if (userSubsData) {
+    if (userSubsData && userSubsData.length > 0) {
       setActiveIncu(userSubsData.length);
+
+      // Ambil data dari langganan pertama (atau bisa disesuaikan)
+      const { start_sub, end_sub } = userSubsData[0];
+
+      const startDate = new Date(start_sub);
+      const endDate = new Date(end_sub);
+
+      // Hitung selisih hari
+      const timeDiff = endDate.getTime() - startDate.getTime();
+      const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+      setDaysLeft(dayDiff);
     }
   }, [userSubsData]);
 
@@ -92,7 +95,7 @@ const SettingCom = () => {
     <div className="space-y-8">
       <div className="flex flex-wrap gap-6 lg:pl-[97px] ml-0">
         <InCubeStatus title="Active" value={activeIncu || 0} />
-        <InCubeStatus title="Days left" value={29} />
+        <InCubeStatus title="Days left" value={daysLeft} />
       </div>
       <div className="flex flex-wrap gap-6 w-full lg:pl-[97px] ml-0 mx-auto">
         <ProfileCard />
