@@ -26,7 +26,7 @@ const sidebarStructure = [
         id: "input-telur",
         title: "eggs Monitoring",
         name: "input-telur",
-        link: "/dashboard/input-telur",
+        link: "/dashboard/eggs-monitoring",
         icon: "dot",
       },
       {
