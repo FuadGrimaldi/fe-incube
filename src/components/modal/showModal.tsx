@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import Swal from "sweetalert2";
+import fetchClient from "@/lib/fetch-client";
 
 const PassKeyModal = () => {
   const [showModal, setShowModal] = useState(false);
@@ -13,12 +14,13 @@ const PassKeyModal = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/user-premium/passkey`, {
+      const response = await fetchClient({
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id, pass_access: passkey }),
+        url:
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/user/update-status-produk`,
+        body: JSON.stringify({
+           id, pass_access: passkey 
+        }),
       });
 
       if (!response.ok) {
