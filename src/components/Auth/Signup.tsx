@@ -2,9 +2,9 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import React, { SyntheticEvent, useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import fetchClient from "@/lib/fetch-client";
 
 const Signup = () => {
   const router = useRouter();
@@ -12,6 +12,7 @@ const Signup = () => {
     username: "",
     email: "",
     password: "",
+    password_confirmation: "",
     name: "",
     age: "",
     gender: "",
@@ -20,6 +21,7 @@ const Signup = () => {
   });
   const [isloading, setIsloading] = useState(false);
   const [error, setError] = useState("");
+  console.log("data", data);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -27,23 +29,36 @@ const Signup = () => {
     setIsloading(true);
     try {
       // Register user
-      const authResponse = await axios.post("/api/register", {
-        username: data.username,
-        email: data.email,
-        password: data.password,
+      const authResponse = await fetchClient({
+        method: "POST",
+        url:
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/register`,
+        body: JSON.stringify({
+          username: data.username,
+          email: data.email,
+          password: data.password,
+          password_confirmation: data.password_confirmation,
+        }),
       });
+      
+      const dataRespone = await authResponse.json();
+      console.log("authResponse", dataRespone);
 
-      if (authResponse.status === 201 || authResponse.status === 200) {
-        const id_user = authResponse.data.data.id;
+      if (dataRespone.meta?.status === "success") {
+        const id_user = dataRespone.data.id;
 
         // Save user details
-        await axios.post("/api/user", {
-          id_user,
-          name: data.name,
-          age: data.age,
-          gender: data.gender,
-          contact: data.contact,
-          job: data.job,
+        const userRespone = await fetchClient({
+          method: "POST",
+          url:
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/users/${id_user}`,
+          body: JSON.stringify({
+            name: data.name,
+            age: data.age,
+            gender: data.gender,
+            contact: data.contact,
+            job: data.job,
+          }),
         });
 
         Swal.fire({
@@ -55,16 +70,26 @@ const Signup = () => {
         });
         router.push("/login");
       } else {
+        console.error("Registration failed:", dataRespone.meta?.message);
         Swal.fire({
+          position: "top",
+          icon: "error",
+          title: "Registration Failed",
+          text: dataRespone.meta?.message || "An error occurred during registration.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    } catch (error:any) {
+      console.error("Error during registration:", error);
+      setError("Gagal melakukan registrasi.");
+      Swal.fire({
           position: "top",
           icon: "error",
           title: "Registration Failed",
           showConfirmButton: false,
           timer: 1500,
         });
-      }
-    } catch (error) {
-      setError("Failed to register. Please try again.");
     } finally {
       setIsloading(false);
     }
@@ -133,6 +158,19 @@ const Signup = () => {
                   type="password"
                   name="password"
                   value={data.password}
+                  onChange={handleChange}
+                  placeholder="************"
+                  className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
+                />
+              </div>
+              <div className="mb-2">
+                <label className="mb-2 block lg:text-lg text-base text-black">
+                  Password Confirmation
+                </label>
+                <input
+                  type="password"
+                  name="password_confirmation"
+                  value={data.password_confirmation}
                   onChange={handleChange}
                   placeholder="************"
                   className="w-full rounded border bg-[#f8f8f8] border-stroke py-2 px-4 text-black outline-none focus:border-primary focus:bg-white"
