@@ -1,6 +1,6 @@
 import { AuthProvider } from "@/components/AuthProvider";
 import { Metadata } from "next";
-import RootLayoutClient from "./rootLayoutClient";
+import RootLayoutClient from "../components/RootLayout/rootLayoutClient";
 
 export const metadata: Metadata = {
   title: "InCube",

@@ -64,7 +64,7 @@ const CardIncubeControll: React.FC<reportParams> = ({productId = "",}) => {
     };
 
     fetcThreshold();
-  }, []);
+  }, [productId]);
 
   const handleSliderChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
     setThreshold1(Number(event.target.value)); // Update threshold langsung

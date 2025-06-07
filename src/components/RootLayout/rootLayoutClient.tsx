@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "@/components/Navbar/navbar";
-import "./globals.css";
+import "../../app/globals.css";
 import { useState, useEffect } from "react";
 import Lines from "@/components/Lines";
 import Footer from "@/components/Footer";

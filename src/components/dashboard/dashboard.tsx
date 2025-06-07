@@ -67,7 +67,7 @@ const Dashboard = () => {
   };
 
   fetchUserSubsData();
-}, []);
+}, [router]);
 
 
   if (loading) {

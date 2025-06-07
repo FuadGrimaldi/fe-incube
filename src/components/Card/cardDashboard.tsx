@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback} from "react";
 import SensorCard from "./cardIncube";
 import Paho from "paho-mqtt";
 import DoubleChart from "../chart/doubleChart"; // Ensure DoubleChart can handle single or array data.
@@ -38,42 +38,7 @@ const CardIncubeDashboard: React.FC<incubeProductProps> = ({
   const [isConnected, setIsConnected] = useState(false);
   const [isOpen, setIsOpen] = useState(false); // For controlling dropdown
   const [lastMessageTime, setLastMessageTime] = useState<number>(Date.now());
-
-  const connectToMqttBroker = async () => {
-    const clientID = "clientID-inc-mqtt";
-    const host = "broker.hivemq.com";
-    const port = 8000;
-
-    const mqttClient: any = new Paho.Client(host, Number(port), clientID);
-
-    mqttClient.onMessageArrived = messageArrived;
-
-    // Handle connection lost
-    mqttClient.onConnectionLost = (responseObject: any) => {
-      if (responseObject.errorCode !== 0) {
-        setIsConnected(false);
-
-        // Wait 2 seconds before setting the status to "Disconnected"
-        setTimeout(() => {
-          setStatisCon("Disconnected");
-        }, 2000);
-      }
-    };
-
-    mqttClient.connect({
-      onSuccess: () => {
-        setClient(mqttClient);
-        setIsConnected(true);
-        setStatisCon("Connected");
-      },
-      onFailure: (message: any) => {
-        setIsConnected(false);
-        setStatisCon("Disconnected");
-      },
-    });
-  };
-
-  const messageArrived = (message: any) => {
+  const messageArrived = useCallback((message: any) => {
     setLastMessageTime(Date.now());
     const payload = message.payloadString;
     const topic = message.destinationName;
@@ -117,19 +82,55 @@ const CardIncubeDashboard: React.FC<incubeProductProps> = ({
     } else if (topic === `${productId}/ipWifi`) {
       setStatusIp(payload);
     }
-  };
+  }, [productId]);
 
-  const subscribeToTopic = (topic: string) => {
+  const connectToMqttBroker = useCallback(() => {
+    const clientID = "clientID-inc-mqtt";
+    const host = "broker.hivemq.com";
+    const port = 8000;
+
+    const mqttClient: any = new Paho.Client(host, Number(port), clientID);
+
+    mqttClient.onMessageArrived = messageArrived;
+
+    // Handle connection lost
+    mqttClient.onConnectionLost = (responseObject: any) => {
+      if (responseObject.errorCode !== 0) {
+        setIsConnected(false);
+
+        // Wait 2 seconds before setting the status to "Disconnected"
+        setTimeout(() => {
+          setStatisCon("Disconnected");
+        }, 2000);
+      }
+    };
+
+    mqttClient.connect({
+      onSuccess: () => {
+        setClient(mqttClient);
+        setIsConnected(true);
+        setStatisCon("Connected");
+      },
+      onFailure: (message: any) => {
+        setIsConnected(false);
+        setStatisCon("Disconnected");
+      },
+    });
+  }, [messageArrived]);
+
+
+
+  const subscribeToTopic =  useCallback((topic: string) => {
     if (client && isConnected && topic) {
       client.subscribe(topic);
     }
-  };
+  }, [client, isConnected]);
 
   useEffect(() => {
-    if (!isConnected) {
-      connectToMqttBroker();
-    }
-  }, [isConnected]);
+      if (!isConnected) {
+        connectToMqttBroker();
+      }
+    }, [isConnected, connectToMqttBroker]);
 
   // Subscribe to topics after client connects
   useEffect(() => {
@@ -142,7 +143,7 @@ const CardIncubeDashboard: React.FC<incubeProductProps> = ({
       subscribeToTopic(`${productId}/FlameStatus`);
       subscribeToTopic(`${productId}/ipWifi`);
     }
-  }, [client, isConnected]);
+  }, [client, isConnected, productId, subscribeToTopic]);
 
   useEffect(() => {
     if (temp && humid) {

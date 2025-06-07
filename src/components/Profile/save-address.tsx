@@ -54,7 +54,13 @@ const SaveAddressForm: React.FC = () => {
       })
       router.push("/dashboard/setting"); // kembali ke halaman setting
     } catch (error) {
-      console.error("Error creating address:", error);
+      Swal.fire({
+        position: "top",
+        icon: "error",
+        title: "Failed to create address, please try again",
+        showConfirmButton: false,
+        timer: 1000,
+      });
     } finally {
       setLoading(false); // stop loading state after the request
     }
