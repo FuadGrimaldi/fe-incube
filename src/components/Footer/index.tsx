@@ -13,8 +13,7 @@ const Footer = () => {
             />
 
             <p className="text-base leading-relaxed text-gray-600 mt-7">
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-              amet sint. Velit officia consequat duis enim velit mollit.
+              What we offer we create features that helps you to hatch your egg faster and easier, wherever you are
             </p>
 
             <ul className="flex items-center space-x-3 mt-9">

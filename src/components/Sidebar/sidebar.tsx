@@ -385,7 +385,7 @@ const Sidebar: FC<SidebarProps> = ({ setExpand }) => {
                       : "h-12 w-12"
                   }`}
                 >
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  <img src="/assets/user/user-3.jpg" />
                 </div>
                 <div
                   className={`text-lg font-semibold tex-white mt-3 truncate duration-300 ${
