@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Paho from "paho-mqtt";
 import ChartWeekly from "../chart/ChartWeekly";
 import InfoCard from "./infoCard";
@@ -93,7 +93,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
     }
   }, []);
 
-  const connectToMqttBroker = async () => {
+  const connectToMqttBroker =  useCallback(() => {
     const clientID = "clientID-inc-mqtt";
     const host = "broker.hivemq.com";
     const port = 8000;
@@ -117,7 +117,7 @@ const CardIncubeReport: React.FC<reportParams> = ({
         setIsConnected(false);
       },
     });
-  };
+  },[productId]);
 
   const messageArrived = (message: any) => {
     const payload = parseFloat(message.payloadString);
@@ -150,14 +150,14 @@ const CardIncubeReport: React.FC<reportParams> = ({
     if (!isConnected) {
       connectToMqttBroker();
     }
-  }, [isConnected]);
+  }, [isConnected, connectToMqttBroker]);
 
-  useEffect(() => {
+    useEffect(() => {
     if (client && isConnected) {
       subscribeToTopic(`${productId}/Temp`);
       subscribeToTopic(`${productId}/Humid`);
     }
-  }, [client, isConnected]);
+  }, [client, isConnected, productId, subscribeToTopic]);
 
   // Menghitung rata-rata mingguan setiap kali data diperbarui
   useEffect(() => {
@@ -198,17 +198,38 @@ const CardIncubeReport: React.FC<reportParams> = ({
         const data = await response.json();
         const result = data.data; // Ambil data dari response
 
-        console.log("Response Data sensor:", result); // ✅ DI SINI AKAN MUNCUL
 
         if (Array.isArray(result)) {
           const sortedData = result.sort((a: any, b: any) => a.id - b.id);
           setData(sortedData);
           setFilteredData(sortedData); // Default filter menunjukkan semua data
         } else {
-          console.error("Invalid data format: Expected an array");
+          Swal.fire({
+            position: "top",
+            icon: "error",
+            title: "Data is not in the expected format",
+            showConfirmButton: false,
+            timer: 2000,
+            customClass: {
+              popup: "custom-swal",
+              title: "custom-swal-title",
+              icon: "custom-swal-icon",
+            },
+          });
         }
       } catch (error) {
-        console.error("Failed to fetch data:");
+        Swal.fire({
+          position: "top",
+          icon: "error",
+          title: "Failed to fetch data",
+          showConfirmButton: false,
+          timer: 2000,
+          customClass: {
+            popup: "custom-swal",
+            title: "custom-swal-title",
+            icon: "custom-swal-icon",
+          },
+        });
       } finally {
         setIsLoading(false);
       }
@@ -290,7 +311,6 @@ const CardIncubeReport: React.FC<reportParams> = ({
       const end = new Date(endDate);
 
       if (start > end) {
-        console.error("Start date cannot be later than end date");
         return;
       }
 
@@ -321,7 +341,19 @@ const CardIncubeReport: React.FC<reportParams> = ({
       setFilteredData(filteredItems); // Update filteredData state
       calculateAverages();
     } else {
-      console.error("Please select both start and end dates");
+      // Jika tidak ada tanggal yang dipilih, reset data yang difilter
+      setFilteredTempData([]);
+      setFilteredHumidData([]);
+      setFilteredGasData([]);
+      setFilteredLabels([]);
+      setFilteredData(data); // Kembalikan ke data awal
+      setAverageTemp(0);
+      setAverageHumid(0);
+      setAverageGas(0);
+      setMaxTemp(0);
+      setMinTemp(0);
+      setMaxHumid(0);
+      setMinHumid(0);
     }
   };
   const calculateAverages = () => {

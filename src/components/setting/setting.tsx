@@ -55,12 +55,10 @@ const SettingCom = () => {
 
       const data = await response.json();
 
-      console.log("Response Data:", data); // ✅ DI SINI AKAN MUNCUL
-
       setUserSubsData(data.data);
 
     } catch (error) {
-      console.error("Error fetching profile data:", error);
+      setUserSubsData(null); // Set to null if there's an error
     } finally {
       setLoading(false);
     }

@@ -21,7 +21,6 @@ const Signup = () => {
   });
   const [isloading, setIsloading] = useState(false);
   const [error, setError] = useState("");
-  console.log("data", data);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -42,7 +41,6 @@ const Signup = () => {
       });
       
       const dataRespone = await authResponse.json();
-      console.log("authResponse", dataRespone);
 
       if (dataRespone.meta?.status === "success") {
         const id_user = dataRespone.data.id;
@@ -70,7 +68,6 @@ const Signup = () => {
         });
         router.push("/login");
       } else {
-        console.error("Registration failed:", dataRespone.meta?.message);
         Swal.fire({
           position: "top",
           icon: "error",
@@ -81,7 +78,6 @@ const Signup = () => {
         });
       }
     } catch (error:any) {
-      console.error("Error during registration:", error);
       setError("Gagal melakukan registrasi.");
       Swal.fire({
           position: "top",

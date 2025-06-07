@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { FaEllipsisV, FaPlus } from "react-icons/fa";
 import fetchClient from "@/lib/fetch-client";
+import { set } from "date-fns";
 
 type AddressData = {
   address: {
@@ -44,11 +45,9 @@ const AddressForm: React.FC = () => {
 
         const data = await response.json();
 
-        console.log("Response Data:", data.data); // ✅ DI SINI AKAN MUNCUL
-
         setAddressData(data.data);
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+       setAddressData(null); // Set to null if there's an error
       } finally {
         setLoading(false);
       }

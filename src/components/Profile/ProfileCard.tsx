@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import fetchClient from "@/lib/fetch-client";
+import Image from 'next/image';
+
 
 type ProfileData = {
   email: string;
@@ -39,11 +41,10 @@ const ProfileCard: React.FC<any> = () => {
 
         const data = await response.json();
 
-        console.log("Response Data:", data.data); // ✅ DI SINI AKAN MUNCUL
 
         setProfileData(data.data);
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        setProfileData(null); // Set to null if there's an error
       } finally {
         setLoading(false);
       }
@@ -81,7 +82,7 @@ const ProfileCard: React.FC<any> = () => {
 
         {/* Profile image */}
         <div className="w-[130px] h-[130px] rounded-full bg-gray-200 mx-auto overflow-hidden mt-6">
-          <img
+          <Image
             src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
             alt="Profile"
             className="w-full h-full object-cover"

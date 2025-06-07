@@ -54,8 +54,6 @@ const ReportCom = () => {
 
         const data = await response.json();
 
-        console.log("Response Data:", data); // ✅ DI SINI AKAN MUNCUL
-
         setUserSubsData(data.data);
 
         // ✅ Ambil id produk dari elemen pertama, jika ada
@@ -64,7 +62,9 @@ const ReportCom = () => {
         localStorage.setItem("productId", firstProductId || "");
 
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        setUserSubsData(null); // Set to null if there's an error
+        // Optionally, you can redirect to an error page or show a notification
+        // router.push("/error"); // Uncomment this line if you want to redirect on error
       } finally {
         setLoading(false);
       }

@@ -90,6 +90,8 @@ const Navbar = ({ scrollTop }: { scrollTop: any }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
+             width={190}//dasar
+            height={80}
           />
         </div>
       </div>

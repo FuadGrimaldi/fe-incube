@@ -40,11 +40,10 @@ const EditProfileForm: React.FC<any> = () => {
 
         const data = await response.json();
 
-        console.log("Response Data:", data.data.detail_user); // ✅ DI SINI AKAN MUNCUL
-
         setProfileData(data.data.detail_user);
-      } catch (error) {
-        console.error("Error fetching profile data:", error);
+      } catch (error) 
+      // Handle error
+      {
       } finally {
         setLoading(false);
       }

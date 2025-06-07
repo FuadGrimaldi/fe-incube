@@ -36,11 +36,17 @@ const UpdateAddressForm: React.FC = () => {
 
         const data = await response.json();
 
-        console.log("Response Data:", data.data.address); // ✅ DI SINI AKAN MUNCUL
 
         setAddressData(data.data.address);
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        setAddressData(null); // Set to null if there's an error
+        Swal.fire({
+          position: "top",
+          icon: "error",
+          title: "Failed to fetch address data, please try again",
+          showConfirmButton: false,
+          timer: 1000,
+        });
       } finally {
         setLoading(false);
       }

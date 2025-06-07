@@ -65,7 +65,6 @@ export const authOptions: NextAuthOptions = {
           });
           const profileResponse = await response.json();
           const user = profileResponse.data; // Ambil dari dalam 'data'
-          console.log("JWT callback triggered", { token, user, trigger, session });
 
           return { ...token, ...user };
         }

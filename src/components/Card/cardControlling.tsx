@@ -49,7 +49,6 @@ const CardIncubeControll: React.FC<reportParams> = ({productId = "",}) => {
         }
 
         const result = await response.json();
-        console.log("Response Data:", result);
 
         if (result.success && result.data) {
           const { min_suhu, max_suhu } = result.data;
@@ -58,7 +57,7 @@ const CardIncubeControll: React.FC<reportParams> = ({productId = "",}) => {
           setThreshold2(max_suhu);
         }
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        setResponseMessage(`Error: ${error instanceof Error ? error.message : "Unknown error"}`);
       } finally {
         setLoading(false);
       }
