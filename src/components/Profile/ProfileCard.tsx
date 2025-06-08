@@ -83,9 +83,11 @@ const ProfileCard: React.FC<any> = () => {
         {/* Profile image */}
         <div className="w-[130px] h-[130px] rounded-full bg-gray-200 mx-auto overflow-hidden mt-6">
           <Image
-            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+            src="/assets/user/user-01.png" // Replace with the actual profile picture URL
             alt="Profile"
             className="w-full h-full object-cover"
+            width={130}
+            height={130}
           />
         </div>
 
